@@ -103,4 +103,8 @@ public class Player {
     public void clearTurn() {
         this.turn = false;
     }
+
+    public boolean hasId(String playerId) {
+        return this.getId().equals(playerId);
+    }
 }

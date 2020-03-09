@@ -26,13 +26,11 @@ public class Game {
         this.opponent = opponent.copy();
     }
 
-    private void swapPlayers() {
-        Player temp = player;
-        player = opponent;
-        opponent = temp;
-    }
-
     public GameState playRound(String playerId, int pit) {
+        requireValidPlayerId(playerId);
+
+        Player player = findPlayerBy(playerId);
+        Player opponent = findPlayerBy(playerId);
 
         int stones = player.captureStones(pit);
 
@@ -43,6 +41,19 @@ public class Game {
         }
 
         return gameState(player, opponent);
+    }
+
+    private void requireValidPlayerId(String playerId) {
+        if (!player.hasId(playerId) && !opponent.hasId(playerId)) {
+            throw new IllegalArgumentException("Invalid playerId: " + playerId);
+        }
+    }
+
+    private Player findPlayerBy(String playerId) {
+        if (player.hasId(playerId)) {
+            return player;
+        }
+        return opponent;
     }
 
     public void moveStones(int stones, int pit) {
