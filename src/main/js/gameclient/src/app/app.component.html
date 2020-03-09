@@ -1,0 +1,46 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+<ng-container *ngIf="isStateAvailable">
+  <div class="card my-5">
+    <div class="card-body">
+      <table class="table table-bordered table-striped">
+        <tbody>
+        <tr>
+          <th bgcolor="#FF0000" scope="col" colspan="7">Player name: {{ gameState.opponent.id }}</th>
+          <th bgcolor="#00FF00"></th>
+        </tr>
+        <tr>
+          <td bgcolor="#FF0000" rowspan="2" align="center">{{ gameState.opponent.largePit }}</td>
+          <td bgcolor="#FF0000" *ngFor="let pit of gameState.opponent.pits" align="center">{{ pit }}</td>
+          <td bgcolor="#00FF00" rowspan="2" align="center">{{ gameState.player.largePit }}</td>
+        </tr>
+        <tr>
+          <td bgcolor="#00FF00" *ngFor="let pit of gameState.player.pits" align="center">{{ pit }}</td>
+        </tr>
+        <tr>
+        <tr>
+          <th bgcolor="#FF0000"></th>
+          <th bgcolor="#00FF00" scope="col" colspan="7" style="text-align: right;">Player name: {{ gameState.player.id }}</th>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card my-5">
+    <div class="card-body">
+      <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="pit">Pit (1-6)</label>
+          <input type="text" class="form-control" formControlName="pit" id="pit" name="pit" placeholder="Enter your pit number"
+                 required >
+        </div>
+        <button type="submit" class="btn btn-info">Submit</button>
+      </form>
+    </div>
+  </div>
+</ng-container>
+
