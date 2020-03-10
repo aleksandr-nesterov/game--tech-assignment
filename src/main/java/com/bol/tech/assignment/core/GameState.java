@@ -3,15 +3,17 @@ package com.bol.tech.assignment.core;
 import lombok.Getter;
 import lombok.ToString;
 
+import static com.bol.tech.assignment.core.PlayerState.of;
+
 @ToString
 @Getter
 public class GameState {
 
-    private final Player player;
-    private final Player opponent;
+    private final PlayerState player;
+    private final PlayerState opponent;
     private final Result result;
 
-    private GameState(Player player, Player opponent) {
+    private GameState(PlayerState player, PlayerState opponent) {
         this.player = player;
         this.opponent = opponent;
         this.result = null;
@@ -24,7 +26,7 @@ public class GameState {
     }
 
     public static GameState gameState(Player player, Player opponent) {
-        return new GameState(player.copy(), opponent.copy());
+        return new GameState(of(player), of(opponent));
     }
 
     public static GameState gameOver(Result result) {
@@ -36,14 +38,14 @@ public class GameState {
     public static class Result {
 
         private final boolean tie;
-        private final Player winner;
+        private final PlayerState winner;
 
         private Result(boolean tie) {
             this.tie = tie;
             this.winner = null;
         }
 
-        private Result(Player winner) {
+        private Result(PlayerState winner) {
             this.winner = winner;
             this.tie = false;
         }
@@ -53,7 +55,7 @@ public class GameState {
         }
 
         public static Result winnerIs(Player winner) {
-            return new Result(winner.copy());
+            return new Result(of(winner));
         }
     }
 

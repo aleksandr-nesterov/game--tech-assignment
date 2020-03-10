@@ -11,8 +11,8 @@ public class GameService {
 
     private final Game game;
 
-    public GameState playNextRound(int pit) {
-        return game.playRound(pit);
+    public GameState playNextRound(String playerId, int pit) {
+        return game.playRound(playerId, pit);
     }
 
 }

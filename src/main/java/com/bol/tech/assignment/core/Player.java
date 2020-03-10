@@ -16,13 +16,15 @@ public class Player {
     private boolean turn;
 
     public Player(String id) {
-        this.id = id;
-        this.pits = new int[] {6, 6, 6, 6, 6, 6};
+        this(id, new int[] {6, 6, 6, 6, 6, 6}, 0, false);
     }
 
     public Player(String id, int[] pits) {
-        this.id = id;
-        this.pits = pits;
+        this(id, pits, 0, false);
+    }
+
+    public Player(String id, int[] pits, boolean turn) {
+        this(id, pits, 0, turn);
     }
 
     private Player(String id, int[] pits, int largePit, boolean turn) {
@@ -33,27 +35,34 @@ public class Player {
     }
 
     public int captureStones(int pit) {
+        requireValidPit(pit);
+
         int stones = pits[pit];
         pits[pit] = 0;
         return stones;
-    }
-
-    public void addStoneToSmallPit(int pit) {
-        if (pit >= pits.length) {
-            throw new IllegalArgumentException("Pit index is " + pit);
-        }
-
-        if (isSmallPit(pit)) {
-            pits[pit]++;
-        }
     }
 
     public void addStoneToLargePit() {
         largePit++;
     }
 
+    public void addStonesToLargePit(int stones) {
+        largePit += stones;
+    }
+
+    public void addStoneToSmallPit(int pit) {
+        requireValidPit(pit);
+        pits[pit]++;
+    }
+
+    private void requireValidPit(int pit) {
+        if (!isSmallPit(pit)) {
+            throw new IllegalArgumentException("Pit index is " + pit);
+        }
+    }
+
     public boolean isSmallPit(int pit) {
-        return pit < pits.length;
+        return 0 <= pit && pit < pits.length;
     }
 
     public boolean isEmptyPit(int pit) {
@@ -72,12 +81,8 @@ public class Player {
         return turn = stones == 0;
     }
 
-    public void addStonesToLargePit(int stones) {
-        largePit += stones;
-    }
-
-    public void myTurn() {
-        this.turn = true;
+    public boolean hasId(String playerId) {
+        return this.getId().equals(playerId);
     }
 
     public int[] getPits() {
@@ -100,11 +105,17 @@ public class Player {
         return new Player(id, Arrays.copyOf(pits, pits.length), largePit, turn);
     }
 
-    public void clearTurn() {
+    public void myTurn() {
+        this.turn = true;
+    }
+
+    public void resetTurn() {
         this.turn = false;
     }
 
-    public boolean hasId(String playerId) {
-        return this.getId().equals(playerId);
+    public void adjustTurn(Player opponent) {
+        if (!isMyTurn()) {
+            opponent.myTurn();
+        }
     }
 }

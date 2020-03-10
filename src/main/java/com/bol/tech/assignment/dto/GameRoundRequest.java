@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class GameRoundRequest {
 
+    private String playerId;
     private int pit;
 
 }

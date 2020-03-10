@@ -20,7 +20,7 @@ public class GameController {
     @PutMapping
     public GameState playNextRound(@RequestBody GameRoundRequest gameRoundRequest) {
         System.out.println(gameRoundRequest);
-        return game.playRound(gameRoundRequest.getPit() - 1);
+        return game.playRound(gameRoundRequest.getPlayerId(), gameRoundRequest.getPit() - 1);
        // return new GameRoundResponse(gameResult);
     }
 
