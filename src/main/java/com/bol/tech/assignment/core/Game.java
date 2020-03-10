@@ -19,13 +19,13 @@ public class Game {
     private final Lock readLock = lock.readLock();
 
     /**
-     * Create a game with 2 players.
+     * Create a game with 2 players. First player has the turn.
      *
      * @param player1Id player 1 id
      * @param player2Id player 2 id
      */
     public Game(String player1Id, String player2Id) {
-        this(new Player(player1Id), new Player(player2Id));
+        this(new Player(player1Id, true), new Player(player2Id));
     }
 
     Game(Player player, Player opponent) {
@@ -35,15 +35,15 @@ public class Game {
 
     /**
      * Play game round with the given player identity and pit index.
-     *
+     * <p>
      * The rules are:
-     *  -- capture player stones from the given pit
-     *  -- move stones across the player and opponent pits
-     *  -- if game is over -> return the winner
-     *     otherwise -> return the game state
+     * -- capture player stones from the given pit
+     * -- move stones across the player and opponent pits
+     * -- if game is over -> return the winner
+     * otherwise -> return the game state
      *
      * @param playerId player identity
-     * @param pit pit index
+     * @param pit      pit index
      * @return {@link GameState}
      */
     public GameState playRound(String playerId, int pit) {
@@ -60,7 +60,7 @@ public class Game {
 
             if (isGameOver()) {
                 resetTurn();
-                return gameOver(chooseWinner());
+                return getState(chooseWinner());
             }
 
             player.adjustTurn(opponent);
@@ -83,6 +83,10 @@ public class Game {
         } finally {
             readLock.unlock();
         }
+    }
+
+    private GameState getState(Result result) {
+        return gameState(player.copy(), opponent.copy(), result);
     }
 
     /**
@@ -144,9 +148,9 @@ public class Game {
     /**
      * Move stones from the given pit across player and opponent pits.
      *
-     * @param stones number of stones
-     * @param pit starting pit index
-     * @param player player
+     * @param stones   number of stones
+     * @param pit      starting pit index
+     * @param player   player
      * @param opponent opponent
      */
     private static void moveStones(int stones, int pit, Player player, Player opponent) {
@@ -167,9 +171,9 @@ public class Game {
      * If last stone lands in the empty pit then capture stones from opponent's opposite pit
      * and add them to the player's large it.
      *
-     * @param stones number of stones
-     * @param pit pit index
-     * @param player player
+     * @param stones   number of stones
+     * @param pit      pit index
+     * @param player   player
      * @param opponent opponent
      * @return stones left
      */
@@ -178,7 +182,7 @@ public class Game {
         while (player.isSmallPit(pit) && stones > 0) {
 
             if (lastStone(stones) && player.isEmptyPit(pit)) {
-                player.addStonesToLargePit(stones + opponent.captureStones(pit));
+                player.addStonesToLargePit(stones + opponent.captureOppositeStones(pit));
                 player.resetTurn();
                 return 0;
             }
@@ -201,7 +205,7 @@ public class Game {
     /**
      * Move stones across opponent pits.
      *
-     * @param stones number of stones
+     * @param stones   number of stones
      * @param opponent opponent
      * @return stones left
      */

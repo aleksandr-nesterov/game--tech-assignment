@@ -19,6 +19,12 @@ public class GameState {
         this.result = null;
     }
 
+    private GameState(PlayerState player, PlayerState opponent, Result result) {
+        this.player = player;
+        this.opponent = opponent;
+        this.result = result;
+    }
+
     private GameState(Result result) {
         this.player = null;
         this.opponent = null;
@@ -29,8 +35,8 @@ public class GameState {
         return new GameState(of(player), of(opponent));
     }
 
-    public static GameState gameOver(Result result) {
-        return new GameState(result);
+    public static GameState gameState(Player player, Player opponent, Result result) {
+        return new GameState(of(player), of(opponent), result);
     }
 
     @Getter

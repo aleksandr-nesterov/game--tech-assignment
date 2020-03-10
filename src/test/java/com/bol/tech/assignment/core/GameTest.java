@@ -100,10 +100,10 @@ public class GameTest {
 
         int[] expectedPlayerPits = {0, 7, 7, 7, 0, 6};
 
-        assertEquals(7, player.getLargePit());
+        assertEquals(9, player.getLargePit());
         assertArrayEquals(expectedPlayerPits, player.getPits());
 
-        int[] expectedOpponentPits = {8, 8, 8, 8, 0, 6};
+        int[] expectedOpponentPits = {8, 0, 8, 8, 6, 6};
 
         assertArrayEquals(expectedOpponentPits, opponent.getPits());
     }

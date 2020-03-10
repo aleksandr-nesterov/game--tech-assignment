@@ -19,6 +19,10 @@ public class Player {
         this(id, new int[] {6, 6, 6, 6, 6, 6}, 0, false);
     }
 
+    public Player(String id, boolean turn) {
+        this(id, new int[] {6, 6, 6, 6, 6, 6}, 0, turn);
+    }
+
     public Player(String id, int[] pits) {
         this(id, pits, 0, false);
     }
@@ -40,6 +44,10 @@ public class Player {
         int stones = pits[pit];
         pits[pit] = 0;
         return stones;
+    }
+
+    public int captureOppositeStones(int pit) {
+        return captureStones(getPits().length - pit - 1);
     }
 
     public void addStoneToLargePit() {
@@ -118,4 +126,5 @@ public class Player {
             opponent.myTurn();
         }
     }
+
 }
