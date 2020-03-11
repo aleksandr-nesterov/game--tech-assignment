@@ -3,9 +3,6 @@ package com.bol.tech.assignment.controllers;
 import com.bol.tech.assignment.core.Game;
 import com.bol.tech.assignment.core.GameState;
 import com.bol.tech.assignment.dto.GameRoundRequest;
-import com.bol.tech.assignment.dto.GameRoundResponse;
-import com.bol.tech.assignment.dto.GameStateDto;
-import com.bol.tech.assignment.dto.PlayerDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

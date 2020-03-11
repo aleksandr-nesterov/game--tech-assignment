@@ -3,6 +3,8 @@ package com.bol.tech.assignment.core;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 @EqualsAndHashCode
 public class PlayerState {
@@ -19,7 +21,11 @@ public class PlayerState {
         this.turn = turn;
     }
 
-    public static PlayerState of(Player player) {
+    public int[] getPits() {
+        return Arrays.copyOf(pits, pits.length);
+    }
+
+    static PlayerState of(Player player) {
         return new PlayerState(player.getId(), player.getPits(), player.getLargePit(), player.isMyTurn());
     }
 

@@ -1,10 +1,12 @@
 package com.bol.tech.assignment.it;
 
 import com.bol.tech.assignment.controllers.GameController;
-import com.bol.tech.assignment.core.GameState;
+import com.bol.tech.assignment.core.Game;
 import com.bol.tech.assignment.core.Player;
 import com.bol.tech.assignment.dto.GameRoundRequest;
 import com.bol.tech.assignment.dto.GameRoundResponse;
+import com.bol.tech.assignment.it.support.GameState;
+import com.bol.tech.assignment.it.support.PlayerState;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -12,10 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,9 +41,10 @@ public class GameIntegrationTest {
 
     @Test
     @DirtiesContext
-    void checkGameRound() throws Exception {
+    void expectStatus200() throws Exception {
         GameRoundRequest request = new GameRoundRequest();
-        request.setPit(0);
+        request.setPlayerId(PLAYER1_ID);
+        request.setPit(1);
 
         client.perform(put("/game")
                 .contentType("application/json")
@@ -46,7 +53,21 @@ public class GameIntegrationTest {
                 .andExpect(content().string(createResponse()));
 
     }
-//
+
+    @Test
+    @DirtiesContext
+    void expectStatus400OnInvalidPlayerId() throws Exception {
+        GameRoundRequest request = new GameRoundRequest();
+        request.setPlayerId("invalid-playerid");
+        request.setPit(1);
+
+        client.perform(put("/game")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
 //    @Test
 //    @DirtiesContext
 //    void checkGameTie() throws Exception {
@@ -96,11 +117,19 @@ public class GameIntegrationTest {
 //    }
 
     private String createResponse() throws JsonProcessingException {
-        Player player = new Player(PLAYER1_ID, new int[] {0, 7, 7, 7, 7, 7});
-        player.addStoneToLargePit();
-        player.myTurn();
-        Player opponent = new Player(PLAYER2_ID, new int[] {6, 6, 6, 6, 6, 6});
-        return objectMapper.writeValueAsString(new GameRoundResponse(GameState.gameState(player, opponent)));
+        PlayerState player = PlayerState.builder()
+                .id(PLAYER1_ID)
+                .largePit(1)
+                .pits(new int[]{0, 7, 7, 7, 7, 7})
+                .turn(true)
+                .build();
+        PlayerState opponent = PlayerState.builder()
+                .id(PLAYER2_ID)
+                .largePit(0)
+                .pits(new int[] {6, 6, 6, 6, 6, 6})
+                .turn(false)
+                .build();
+        return objectMapper.writeValueAsString(GameState.builder().player(player).opponent(opponent).build());
     }
 //
 //    private String createTieResponse() throws JsonProcessingException {

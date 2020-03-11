@@ -1,6 +1,5 @@
 package com.bol.tech.assignment.core;
 
-import com.bol.tech.assignment.core.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +15,7 @@ public class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        player = new Player(PLAYER_NAME, new int[]{6, 6, 6, 6, 6, 6});
+        player = new Player(PLAYER_NAME, new int[]{6, 6, 6, 6, 6, 6}, true);
     }
 
     @Test
@@ -86,11 +85,40 @@ public class PlayerTest {
     }
 
     @Test
-    void expectToSetTurn() {
+    void expectToSetAnotherTurn() {
         player = new Player(PLAYER_NAME, new int[]{0, 0, 0, 0, 0, 0});
 
-        assertTrue(player.hasAnotherTurn(1));
+        assertTrue(player.hasAnotherTurn(0));
     }
 
+    @Test
+    void expectPlayerToHaveId() {
+        player = new Player(PLAYER_NAME, new int[]{0, 0, 0, 0, 0, 0});
 
+        assertTrue(player.hasId(PLAYER_NAME));
+    }
+
+    @Test
+    void expect36Stones() {
+        assertEquals(36, player.getAllStones());
+    }
+
+    @Test
+    void expectPlayerCopy() {
+
+        Player copy = player.copy();
+
+        assertNotEquals(System.identityHashCode(player), System.identityHashCode(copy));
+    }
+
+    @Test
+    void expectTurnSwitch() {
+        player = new Player(PLAYER_NAME, new int[]{0, 0, 0, 0, 0, 0});
+        Player opponent = new Player("opponent_name", new int[]{6, 6, 6, 6, 6, 6});
+
+        player.adjustTurn(opponent);
+
+        assertFalse(player.isMyTurn());
+        assertTrue(opponent.isMyTurn());
+    }
 }

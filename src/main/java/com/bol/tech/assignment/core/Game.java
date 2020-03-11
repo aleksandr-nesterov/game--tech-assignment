@@ -60,7 +60,7 @@ public class Game {
 
             if (isGameOver()) {
                 resetTurn();
-                return getState(chooseWinner());
+                return gameOver(chooseWinner());
             }
 
             player.adjustTurn(opponent);
@@ -85,7 +85,13 @@ public class Game {
         }
     }
 
-    private GameState getState(Result result) {
+    /**
+     * Return the game state with the result.
+     *
+     * @param result result of the game
+     * @return {@link GameState}
+     */
+    private GameState gameOver(Result result) {
         return gameState(player.copy(), opponent.copy(), result);
     }
 
@@ -195,9 +201,7 @@ public class Game {
             player.addStoneToLargePit();
         }
 
-        if (player.hasAnotherTurn(stones)) {
-            player.myTurn();
-        }
+        player.hasAnotherTurn(stones);
 
         return stones;
     }

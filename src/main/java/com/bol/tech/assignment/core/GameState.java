@@ -5,7 +5,9 @@ import lombok.ToString;
 
 import static com.bol.tech.assignment.core.PlayerState.of;
 
-@ToString
+/**
+ * Represents current game state.
+ */
 @Getter
 public class GameState {
 
@@ -14,9 +16,7 @@ public class GameState {
     private final Result result;
 
     private GameState(PlayerState player, PlayerState opponent) {
-        this.player = player;
-        this.opponent = opponent;
-        this.result = null;
+        this(player, opponent, null);
     }
 
     private GameState(PlayerState player, PlayerState opponent, Result result) {
@@ -25,17 +25,11 @@ public class GameState {
         this.result = result;
     }
 
-    private GameState(Result result) {
-        this.player = null;
-        this.opponent = null;
-        this.result = result;
-    }
-
-    public static GameState gameState(Player player, Player opponent) {
+    static GameState gameState(Player player, Player opponent) {
         return new GameState(of(player), of(opponent));
     }
 
-    public static GameState gameState(Player player, Player opponent, Result result) {
+    static GameState gameState(Player player, Player opponent, Result result) {
         return new GameState(of(player), of(opponent), result);
     }
 
@@ -56,11 +50,11 @@ public class GameState {
             this.tie = false;
         }
 
-        public static Result tie() {
+        static Result tie() {
             return new Result(true);
         }
 
-        public static Result winnerIs(Player winner) {
+        static Result winnerIs(Player winner) {
             return new Result(of(winner));
         }
     }
