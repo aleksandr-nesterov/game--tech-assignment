@@ -1,10 +1,6 @@
 package com.bol.tech.assignment.it;
 
-import com.bol.tech.assignment.controllers.GameController;
-import com.bol.tech.assignment.core.Game;
-import com.bol.tech.assignment.core.Player;
 import com.bol.tech.assignment.dto.GameRoundRequest;
-import com.bol.tech.assignment.dto.GameRoundResponse;
 import com.bol.tech.assignment.it.support.GameState;
 import com.bol.tech.assignment.it.support.PlayerState;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,14 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,6 +52,20 @@ public class GameIntegrationTest {
         GameRoundRequest request = new GameRoundRequest();
         request.setPlayerId("invalid-playerid");
         request.setPit(1);
+
+        client.perform(put("/game")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @DirtiesContext
+    void expectStatus400OnInvalidPit() throws Exception {
+        GameRoundRequest request = new GameRoundRequest();
+        request.setPlayerId(PLAYER1_ID);
+        request.setPit(7);
 
         client.perform(put("/game")
                 .contentType("application/json")

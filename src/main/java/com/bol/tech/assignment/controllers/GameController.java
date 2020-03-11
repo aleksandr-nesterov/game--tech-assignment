@@ -16,16 +16,12 @@ public class GameController {
 
     @PutMapping
     public GameState playNextRound(@RequestBody GameRoundRequest gameRoundRequest) {
-        System.out.println(gameRoundRequest);
         return game.playRound(gameRoundRequest.getPlayerId(), gameRoundRequest.getPit() - 1);
-       // return new GameRoundResponse(gameResult);
     }
 
     @GetMapping
     public GameState getGameState() {
         return game.getState();
-        //return new GameRoundResponse(gameState);
-//        return new GameStateDto(PlayerDto.of(gameState.getPlayer()), PlayerDto.of(gameState.getOpponent()));
     }
 
 }

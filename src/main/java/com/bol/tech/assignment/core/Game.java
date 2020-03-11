@@ -65,7 +65,7 @@ public class Game {
 
             player.adjustTurn(opponent);
 
-            return getState();
+            return gameState(this.player.copy(), this.opponent.copy());
         } finally {
             writeLock.unlock();
         }
@@ -79,6 +79,9 @@ public class Game {
     public GameState getState() {
         readLock.lock();
         try {
+            if (isGameOver()) {
+                return gameOver(chooseWinner());
+            }
             return gameState(player.copy(), opponent.copy());
         } finally {
             readLock.unlock();
