@@ -19,6 +19,13 @@ public class GameController {
         return game.playRound(gameRoundRequest.getPlayerId(), gameRoundRequest.getPit() - 1);
     }
 
+    @PutMapping("/reset")
+    public GameState resetGame() {
+        game.resetState();
+
+        return game.getState();
+    }
+
     @GetMapping
     public GameState getGameState() {
         return game.getState();
