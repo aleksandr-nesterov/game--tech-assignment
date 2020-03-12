@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 /**
  * This class is meant for internal use only.
- * Its not thread-safe so external synchronization mechanisms have to be used.
+ * Its not thread-safe so external synchronization has to be used.
  */
 @NotThreadSafe
 public class Player {
