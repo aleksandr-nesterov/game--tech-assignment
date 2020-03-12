@@ -1,7 +1,7 @@
 package com.bol.tech.assignment.core;
 
 import lombok.Getter;
-import lombok.ToString;
+import net.jcip.annotations.Immutable;
 
 import static com.bol.tech.assignment.core.PlayerState.of;
 
@@ -9,6 +9,7 @@ import static com.bol.tech.assignment.core.PlayerState.of;
  * Represents current game state.
  */
 @Getter
+@Immutable
 public class GameState {
 
     private final PlayerState player;
@@ -34,7 +35,7 @@ public class GameState {
     }
 
     @Getter
-    @ToString
+    @Immutable
     public static class Result {
 
         private final boolean tie;

@@ -1,16 +1,14 @@
 package com.bol.tech.assignment.core;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import net.jcip.annotations.NotThreadSafe;
 
 import java.util.Arrays;
 
 /**
- * This class is meant for internal use only. Represents the player of the game.
- * Its not thread-safe.
+ * This class is meant for internal use only.
+ * Its not thread-safe so external synchronization mechanisms have to be used.
  */
-@ToString
-@EqualsAndHashCode
+@NotThreadSafe
 public class Player {
 
     private final String id;

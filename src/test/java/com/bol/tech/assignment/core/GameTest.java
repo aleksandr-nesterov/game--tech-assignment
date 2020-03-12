@@ -227,6 +227,23 @@ public class GameTest {
     }
 
     @Test
+    void expectToResetGame() {
+        game.playRound(PLAYER_NAME, 0);
+        game.resetState();
+
+        GameState gameState = game.getState();
+
+        int[] expectedPlayerPits = {6, 6, 6, 6, 6, 6};
+
+        assertEquals(0, gameState.getPlayer().getLargePit());
+        assertArrayEquals(expectedPlayerPits, gameState.getPlayer().getPits());
+
+        int[] expectedOpponentPits = {6, 6, 6, 6, 6, 6};
+
+        assertEquals(0, gameState.getOpponent().getLargePit());
+        assertArrayEquals(expectedOpponentPits, gameState.getOpponent().getPits());
+    }
+    @Test
     void expectFailureOnNullPlayer() {
         assertThrows(NullPointerException.class, () -> game.playRound(null, 0));
     }

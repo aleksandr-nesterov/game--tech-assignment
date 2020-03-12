@@ -1,6 +1,7 @@
 package com.bol.tech.assignment.it;
 
 import com.bol.tech.assignment.dto.GameRoundRequest;
+import com.bol.tech.assignment.it.support.GameRequest;
 import com.bol.tech.assignment.it.support.GameState;
 import com.bol.tech.assignment.it.support.PlayerState;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,9 +35,9 @@ public class GameIntegrationTest {
     @Test
     @DirtiesContext
     void expectStatus200() throws Exception {
-        GameRoundRequest request = new GameRoundRequest();
+        GameRequest request = new GameRequest();
         request.setPlayerId(PLAYER1_ID);
-        request.setPit(1);
+        request.setPit(String.valueOf(1));
 
         client.perform(put("/game")
                 .contentType("application/json")
@@ -49,9 +50,9 @@ public class GameIntegrationTest {
     @Test
     @DirtiesContext
     void expectStatus400OnInvalidPlayerId() throws Exception {
-        GameRoundRequest request = new GameRoundRequest();
+        GameRequest request = new GameRequest();
         request.setPlayerId("invalid-playerid");
-        request.setPit(1);
+        request.setPit(String.valueOf(1));
 
         client.perform(put("/game")
                 .contentType("application/json")
@@ -62,10 +63,24 @@ public class GameIntegrationTest {
 
     @Test
     @DirtiesContext
-    void expectStatus400OnInvalidPit() throws Exception {
-        GameRoundRequest request = new GameRoundRequest();
+    void expectStatus400OnInvalidIntegerPit() throws Exception {
+        GameRequest request = new GameRequest();
         request.setPlayerId(PLAYER1_ID);
-        request.setPit(7);
+        request.setPit(String.valueOf(7));
+
+        client.perform(put("/game")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @DirtiesContext
+    void expectStatus400OnInvalidStringPit() throws Exception {
+        GameRequest request = new GameRequest();
+        request.setPlayerId(PLAYER1_ID);
+        request.setPit("abc");
 
         client.perform(put("/game")
                 .contentType("application/json")

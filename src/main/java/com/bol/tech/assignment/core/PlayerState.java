@@ -2,11 +2,16 @@ package com.bol.tech.assignment.core;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import net.jcip.annotations.Immutable;
 
 import java.util.Arrays;
 
+/**
+ * Represents current player state.
+ */
 @Getter
 @EqualsAndHashCode
+@Immutable
 public class PlayerState {
 
     private final String id;

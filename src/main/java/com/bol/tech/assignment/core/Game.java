@@ -1,5 +1,7 @@
 package com.bol.tech.assignment.core;
 
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -9,10 +11,14 @@ import static com.bol.tech.assignment.core.GameState.*;
 import static com.bol.tech.assignment.core.GameState.Result.tie;
 import static com.bol.tech.assignment.core.GameState.Result.winnerIs;
 
+@ThreadSafe
 public class Game {
 
-    private final Player player;
-    private final Player opponent;
+    private final Player originalPlayer;
+    private final Player originalOpponent;
+
+    private Player player;
+    private Player opponent;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock writeLock = lock.writeLock();
@@ -31,10 +37,13 @@ public class Game {
     Game(Player player, Player opponent) {
         this.player = player;
         this.opponent = opponent;
+        this.originalPlayer = player.copy();
+        this.originalOpponent = opponent.copy();
     }
 
     /**
      * Play game round with the given player identity and pit index.
+     *
      * <p>
      * The rules are:
      * -- capture player stones from the given pit
@@ -47,13 +56,13 @@ public class Game {
      * @return {@link GameState}
      */
     public GameState playRound(String playerId, int pit) {
-        requireValidPlayerId(playerId);
-
-        Player player = findPlayerBy(playerId);
-        Player opponent = findOpponentBy(playerId);
-
         writeLock.lock();
         try {
+            requireValidPlayerId(playerId);
+
+            Player player = findPlayerBy(playerId);
+            Player opponent = findOpponentBy(playerId);
+
             int stones = player.captureStones(pit);
 
             moveStones(stones, pit + 1, player, opponent);
@@ -65,14 +74,14 @@ public class Game {
 
             player.adjustTurn(opponent);
 
-            return gameState(this.player.copy(), this.opponent.copy());
+            return nextRound();
         } finally {
             writeLock.unlock();
         }
     }
 
     /**
-     * Getter for game state.
+     * Return the game state. Only read operations are allowed here.
      *
      * @return {@link GameState}
      */
@@ -85,6 +94,19 @@ public class Game {
             return gameState(player.copy(), opponent.copy());
         } finally {
             readLock.unlock();
+        }
+    }
+
+    /**
+     * Reset the game state to original state.
+     */
+    public void resetState() {
+        writeLock.lock();
+        try {
+            this.player = originalPlayer.copy();
+            this.opponent = originalOpponent.copy();
+        } finally {
+            writeLock.unlock();
         }
     }
 
@@ -127,6 +149,15 @@ public class Game {
         return tie();
     }
 
+    /**
+     * Return the current state of the game for the next round.
+     *
+     * @return {@link GameState}
+     */
+    private GameState nextRound() {
+        return gameState(this.player.copy(), this.opponent.copy());
+    }
+
     private void requireValidPlayerId(String playerId) {
         Objects.requireNonNull(playerId, "Player can not be null");
 
@@ -149,6 +180,9 @@ public class Game {
         return player;
     }
 
+    /**
+     * Reset next turn of the players.
+     */
     private void resetTurn() {
         player.resetTurn();
         opponent.resetTurn();
