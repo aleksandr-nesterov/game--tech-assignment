@@ -26,10 +26,25 @@ public class GameState {
         this.result = result;
     }
 
+    /**
+     * Create a game state without result as the game still in progress.
+     *
+     * @param player {@link Player}
+     * @param opponent {@link Player}
+     * @return {@link GameState}
+     */
     static GameState gameState(Player player, Player opponent) {
         return new GameState(of(player), of(opponent));
     }
 
+    /**
+     * Create a game state with the result.
+     *
+     * @param player {@link Player}
+     * @param opponent {@link Player}
+     * @param result {@link Result}
+     * @return {@link GameState}
+     */
     static GameState gameState(Player player, Player opponent, Result result) {
         return new GameState(of(player), of(opponent), result);
     }
@@ -51,10 +66,21 @@ public class GameState {
             this.tie = false;
         }
 
+        /**
+         * Result of the game is - tie.
+         *
+         * @return {@link Result}
+         */
         static Result tie() {
             return new Result(true);
         }
 
+        /**
+         * Create result of the game with the given player.
+         *
+         * @param winner winner of the game
+         * @return {@link Result}
+         */
         static Result winnerIs(Player winner) {
             return new Result(of(winner));
         }
