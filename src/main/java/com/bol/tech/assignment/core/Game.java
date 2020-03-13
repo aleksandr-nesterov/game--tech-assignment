@@ -234,7 +234,7 @@ public class Game {
             stones--;
         }
 
-        if (stones-- > 0) {
+        if (hasStones(stones--)) {
             player.addStoneToLargePit();
         }
 
