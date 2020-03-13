@@ -30,6 +30,12 @@ public class PlayerState {
         return Arrays.copyOf(pits, pits.length);
     }
 
+    /**
+     * Create a player state from {@link Player} player.
+     *
+     * @param player {@link Player}
+     * @return {@link PlayerState}
+     */
     static PlayerState of(Player player) {
         return new PlayerState(player.getId(), player.getPits(), player.getLargePit(), player.isMyTurn());
     }

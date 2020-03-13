@@ -222,7 +222,7 @@ public class Game {
      */
     private static int movePlayerStones(int stones, int pit, Player player, Player opponent) {
 
-        while (player.isSmallPit(pit) && stones > 0) {
+        while (player.isSmallPit(pit) && hasStones(stones)) {
 
             if (lastStone(stones) && player.isEmptyPit(pit)) {
                 player.addStonesToLargePit(stones + opponent.captureOppositeStones(pit));
@@ -234,7 +234,7 @@ public class Game {
             stones--;
         }
 
-        if (stones-- > 0) {
+        if (hasStones(stones--)) {
             player.addStoneToLargePit();
         }
 
@@ -252,14 +252,19 @@ public class Game {
      */
     private static int moveOpponentStones(int stones, Player opponent) {
         int pit = 0;
-        while (opponent.isSmallPit(pit) && stones-- > 0) {
+        while (opponent.isSmallPit(pit) && hasStones(stones)) {
             opponent.addStoneToSmallPit(pit++);
+            stones--;
         }
         return stones;
     }
 
     private static boolean lastStone(int stones) {
         return stones == 1;
+    }
+
+    private static boolean hasStones(int stones) {
+        return stones > 0;
     }
 
 }

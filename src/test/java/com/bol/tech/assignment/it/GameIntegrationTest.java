@@ -1,6 +1,5 @@
 package com.bol.tech.assignment.it;
 
-import com.bol.tech.assignment.dto.GameRoundRequest;
 import com.bol.tech.assignment.it.support.GameRequest;
 import com.bol.tech.assignment.it.support.GameState;
 import com.bol.tech.assignment.it.support.PlayerState;
@@ -89,54 +88,6 @@ public class GameIntegrationTest {
 
     }
 
-//    @Test
-//    @DirtiesContext
-//    void checkGameTie() throws Exception {
-//        simulateGameTie();
-//
-//        GameRoundRequest request = new GameRoundRequest(5, PLAYER1_ID, PLAYER2_ID);
-//
-//        client.perform(put("/game/next-round")
-//                .contentType("application/json")
-//                .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(createTieResponse()));
-//
-//    }
-//
-//    @Test
-//    @DirtiesContext
-//    void checkGameWinner() throws Exception {
-//        simulateGameWinner();
-//
-//        GameRoundRequest request = new GameRoundRequest(5, PLAYER1_ID, PLAYER2_ID);
-//
-//        client.perform(put("/game/next-round")
-//                .contentType("application/json")
-//                .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(createWinnerResponse()));
-//
-//    }
-
-//    private void simulateGameTie() {
-//        simulateGameResult(35);
-//    }
-//
-//    private void simulateGameWinner() {
-//        simulateGameResult(36);
-//    }
-//
-//    private void simulateGameResult(int largePitStones) {
-//        Player player = gameController.getPlayerMap().get(PLAYER1_ID);
-//        int[] pits = player.getPits();
-//        for (int i = 0; i < pits.length; i++) {
-//            pits[i] = 0;
-//        }
-//        pits[pits.length - 1] = 1;
-//        player.addStonesToLargePit(largePitStones);
-//    }
-
     private String createResponse() throws JsonProcessingException {
         PlayerState player = PlayerState.builder()
                 .id(PLAYER1_ID)
@@ -152,15 +103,5 @@ public class GameIntegrationTest {
                 .build();
         return objectMapper.writeValueAsString(GameState.builder().player(player).opponent(opponent).build());
     }
-//
-//    private String createTieResponse() throws JsonProcessingException {
-//        return objectMapper.writeValueAsString(new GameRoundResponse(Result.tie()));
-//    }
-//
-//    private String createWinnerResponse() throws JsonProcessingException {
-//        Player player = new Player(PLAYER1_ID, new int[] {0, 0, 0, 0, 0, 0});
-//        player.addStonesToLargePit(37);
-//        player.hasAnotherTurn(0);
-//        return objectMapper.writeValueAsString(new GameRoundResponse(Result.winnerIs(player)));
-//    }
+
 }
